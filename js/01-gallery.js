@@ -1,9 +1,27 @@
 import { galleryItems } from './gallery-items.js';
 
-const root = document.querySelector('.gallery');
-root.addEventListener('click', handleItemClick);
+const rootRef = document.querySelector('.gallery');
+rootRef.addEventListener('click', handleItemClick);
 
 let instance;
+
+const markup = galleryItems
+  .map(
+    ({ preview, description, original }) => `
+      <li class="gallery__item">
+        <a class="gallery__link" href="${original}">
+          <img
+            class="gallery__image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+          />
+        </a>
+      </li>`
+  )
+  .join('');
+
+rootRef.insertAdjacentHTML('beforeend', markup);
 
 function handleItemClick(event) {
   event.preventDefault();
@@ -16,11 +34,8 @@ function handleItemClick(event) {
   `);
 
   instance.show();
-}
 
-function closeGalleryModal() {
-  instance.close();
-  window.removeEventListener(handlePressKeys);
+  backdropHandler();
 }
 
 function handlePressKeys(event) {
@@ -29,24 +44,14 @@ function handlePressKeys(event) {
   }
 }
 
-function renderGalleryList() {
-  const markup = galleryItems
-    .map(
-      ({ preview, description, original }) => `
-      <li class="gallery__item">
-        <a class="gallery__link" href="${original}">
-          <img
-            class="gallery__image"
-            src="${preview}"
-            data-source="${original}"
-            alt="${description}"
-          />
-        </a>
-      </li>`
-    )
-    .join('');
-
-  root.insertAdjacentHTML('beforeend', markup);
+function closeGalleryModal() {
+  instance.close();
+  window.removeEventListener('keydown', handlePressKeys);
 }
 
-renderGalleryList();
+function backdropHandler() {
+  const backdropRef = document.querySelector('.basicLightbox');
+  backdropRef.addEventListener('click', () => {
+    window.removeEventListener('keydown', handlePressKeys);
+  });
+}
