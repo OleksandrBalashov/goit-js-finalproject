@@ -1,7 +1,6 @@
 import { galleryItems } from './gallery-items.js';
 
 const rootRef = document.querySelector('.gallery');
-rootRef.addEventListener('click', handleItemClick);
 
 const markup = galleryItems
   .map(
@@ -16,11 +15,7 @@ const markup = galleryItems
 
 rootRef.insertAdjacentHTML('beforeend', markup);
 
-function handleItemClick(event) {
-  event.preventDefault();
-
-  new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
-}
+new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
